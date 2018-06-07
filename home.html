@@ -15,6 +15,22 @@
 <body>
     <div id="app">
         <h1>berhasil masuk</h1>
+
+        <input type="file" @change="fetchImg" >
+        <button @click="upload">Submit</button>
+
+        <div class="container-fluid border">
+            <div class="row">
+                <div class="col-md-0 col-sm-0 productbox" v-for="item in result">
+                    <img v-bind:src="item.url" class="img-responsive">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+                <div class="col-md-4 ">
+                    <img v-bind:src="linkImg" alt="">
+                </div>
+            </div>
     </div>
 
 
@@ -22,20 +38,56 @@
         var app = new Vue({
             el: '#app',
             data: {
+                result: [],
+                img: null,
+                linkImg: ''
+            },
+            created: function () {
+                this.getImage()
+                // this.postData()
 
             },
             methods: {
                 getImage() {
-                    let uuid = localStorage.setItem("token", data.uuid)
+                    let uuid = localStorage.getItem('token')
                     axios.get('http://35.197.135.159/image', {
                         headers: {
                             authorization: uuid
                         }
                     })
-                        .then(({ data }) => {
-                            console.log(data);
+                        .then(response => {
+                            // console.log(response.data);
+                            this.result = response.data
 
                         })
+                        .catch(function (error) {
+                            console.log('error')
+                        })
+                },
+                fetchImg(e) {
+                    this.img = e.target.files[0]
+                },
+
+                upload() {
+                    let formData = new FormData()
+
+
+                    formData.append('file', this.img)
+                    // formData.append('text', 'text apa')
+                    let uuid = localStorage.getItem('token')
+                    axios({
+                        url: 'http://35.197.135.159/image',
+                        method: 'post',
+                        data: formData,
+                        headers: {
+                            authorization: uuid
+                        }
+                    })
+                        .then(response => console.log(response)
+                        )
+                        // { this.linkImg = response.data.url }
+
+                        .catch(err => console.log(err))
                 }
             }
         })

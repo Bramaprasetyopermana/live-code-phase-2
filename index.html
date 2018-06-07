@@ -41,10 +41,13 @@
                 addName: '',
                 addEmail: ''
             },
+            
             methods: {
                 postLogin() {
+                    event.preventDefault()
                     // ====================== axios ==========================
                     axios.post('http://35.197.135.159/request-token', {
+                        
                         name: this.addName,
                         email: this.addEmail
                     })
@@ -61,18 +64,6 @@
                     // ====================== axios ==========================
                 },
 
-                getImage() {
-                    let uuid = localStorage.setItem("token", data.uuid)
-                    axios.get('http://35.197.135.159/image', {
-                        headers: {
-                            authorization: uuid
-                        }
-                    })
-                        .then(({ data }) => {
-                            console.log(data);
-                            
-                        })
-                }
             }
         })
 
